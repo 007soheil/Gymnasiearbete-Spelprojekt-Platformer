@@ -934,11 +934,12 @@ _data = {
 }
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_nn08x"]
-radius = 11.0
-height = 66.0
+radius = 8.0
+height = 34.0
 
 [node name="Player" type="CharacterBody2D"]
 collision_layer = 2
+collision_mask = 5
 script = ExtResource("1_i2e8t")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
@@ -951,5 +952,5 @@ libraries = {
 }
 
 [node name="PlayerCollision" type="CollisionShape2D" parent="."]
-position = Vector2(1, -1)
+scale = Vector2(2, 2)
 shape = SubResource("CapsuleShape2D_nn08x")
