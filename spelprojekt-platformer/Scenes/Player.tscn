@@ -935,11 +935,12 @@ _data = {
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_nn08x"]
 radius = 8.0
-height = 34.0
+height = 31.0
 
 [node name="Player" type="CharacterBody2D"]
 collision_layer = 2
 collision_mask = 5
+safe_margin = 4.0
 script = ExtResource("1_i2e8t")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
