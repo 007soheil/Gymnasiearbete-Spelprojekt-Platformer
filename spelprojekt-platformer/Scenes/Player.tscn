@@ -1,4 +1,4 @@
-[gd_scene load_steps=48 format=3 uid="uid://b8tgqgf7qts56"]
+[gd_scene load_steps=49 format=3 uid="uid://b8tgqgf7qts56"]
 
 [ext_resource type="Script" uid="uid://c5b4ambj1vlb6" path="res://Scripts/player.gd" id="1_i2e8t"]
 [ext_resource type="Texture2D" uid="uid://dkmo1j5haml4s" path="res://Sprites/Character sprites/male_hero-design.png" id="1_rpqav"]
@@ -588,6 +588,7 @@ tracks/2/keys = {
 
 [sub_resource type="Animation" id="Animation_i2e8t"]
 resource_name = "run"
+loop_mode = 1
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -937,9 +938,13 @@ _data = {
 radius = 8.0
 height = 31.0
 
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_i2e8t"]
+radius = 18.0
+height = 64.0
+
 [node name="Player" type="CharacterBody2D"]
 collision_layer = 2
-collision_mask = 5
+floor_snap_length = 8.0
 safe_margin = 4.0
 script = ExtResource("1_i2e8t")
 
@@ -955,3 +960,17 @@ libraries = {
 [node name="PlayerCollision" type="CollisionShape2D" parent="."]
 scale = Vector2(2, 2)
 shape = SubResource("CapsuleShape2D_nn08x")
+
+[node name="Special_Attack_Cooldown" type="Timer" parent="."]
+wait_time = 2.2
+one_shot = true
+
+[node name="Hitbox" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+position = Vector2(35, 0)
+shape = SubResource("CapsuleShape2D_i2e8t")
+debug_color = Color(0.98852, 0, 0.301054, 0.42)
+
+[connection signal="timeout" from="Special_Attack_Cooldown" to="." method="_on_special_attack_cooldown_timeout"]
+[connection signal="area_entered" from="Hitbox" to="." method="_on_hitbox_area_entered"]
