@@ -1,0 +1,197 @@
+[gd_scene load_steps=17 format=3 uid="uid://cnrf6bu1v01a2"]
+
+[ext_resource type="Texture2D" uid="uid://cyhqxtqmj6out" path="res://Sprites/Background and tiles/background1.png" id="1_ce3w2"]
+[ext_resource type="Script" uid="uid://dr54f08wj457o" path="res://Scripts/main_menu.gd" id="1_n45e2"]
+[ext_resource type="Texture2D" uid="uid://dpgr0haku2mqx" path="res://Sprites/Background and tiles/background2.png" id="2_n45e2"]
+[ext_resource type="Texture2D" uid="uid://35a6tnl4m6am" path="res://Sprites/Background and tiles/background3.png" id="3_opfnp"]
+[ext_resource type="Texture2D" uid="uid://c343e5oanjwap" path="res://Sprites/Background and tiles/background4b.png" id="4_cp0ys"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yhxw7"]
+bg_color = Color(0.486275, 0.486275, 0.486275, 0.690196)
+corner_radius_top_left = 35
+corner_radius_top_right = 35
+corner_radius_bottom_right = 35
+corner_radius_bottom_left = 35
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_opfnp"]
+bg_color = Color(1, 1, 1, 0.670588)
+corner_radius_top_left = 35
+corner_radius_top_right = 35
+corner_radius_bottom_right = 35
+corner_radius_bottom_left = 35
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_trj04"]
+bg_color = Color(0.266667, 0.701961, 0.380392, 0.67451)
+corner_radius_top_left = 35
+corner_radius_top_right = 35
+corner_radius_bottom_right = 35
+corner_radius_bottom_left = 35
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_16hvj"]
+bg_color = Color(0.698039, 0.698039, 0.698039, 0.713726)
+corner_radius_top_left = 35
+corner_radius_top_right = 35
+corner_radius_bottom_right = 35
+corner_radius_bottom_left = 35
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_n45e2"]
+bg_color = Color(1, 1, 1, 0.658824)
+corner_radius_top_left = 35
+corner_radius_top_right = 35
+corner_radius_bottom_right = 35
+corner_radius_bottom_left = 35
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vr1f0"]
+bg_color = Color(0.925525, 0.77922, 0.353145, 0.654902)
+corner_radius_top_left = 35
+corner_radius_top_right = 35
+corner_radius_bottom_right = 35
+corner_radius_bottom_left = 35
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vtepg"]
+bg_color = Color(0.65098, 0.65098, 0.65098, 0.72549)
+corner_radius_top_left = 35
+corner_radius_top_right = 35
+corner_radius_bottom_right = 35
+corner_radius_bottom_left = 35
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cp0ys"]
+bg_color = Color(1, 1, 1, 0.709804)
+corner_radius_top_left = 35
+corner_radius_top_right = 35
+corner_radius_bottom_right = 35
+corner_radius_bottom_left = 35
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8dnnj"]
+bg_color = Color(0.780392, 0.278431, 0.278431, 0.701961)
+corner_radius_top_left = 35
+corner_radius_top_right = 35
+corner_radius_bottom_right = 35
+corner_radius_bottom_left = 35
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_t1dhk"]
+bg_color = Color(0.6, 0.6, 0.6, 0.752941)
+corner_radius_top_left = 35
+corner_radius_top_right = 35
+corner_radius_bottom_right = 35
+corner_radius_bottom_left = 35
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5egv6"]
+bg_color = Color(0.415686, 0.607843, 0.866667, 0.768627)
+corner_radius_top_left = 35
+corner_radius_top_right = 35
+corner_radius_bottom_right = 35
+corner_radius_bottom_left = 35
+
+[node name="MainMenu" type="CanvasLayer"]
+script = ExtResource("1_n45e2")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(957, 537)
+scale = Vector2(2.00208, 2.2375)
+texture = ExtResource("1_ce3w2")
+
+[node name="Sprite2D2" type="Sprite2D" parent="."]
+position = Vector2(963, 534)
+scale = Vector2(1.99792, 2.20833)
+texture = ExtResource("2_n45e2")
+
+[node name="Sprite2D3" type="Sprite2D" parent="."]
+position = Vector2(965, 546)
+scale = Vector2(2.00208, 2.25)
+texture = ExtResource("3_opfnp")
+
+[node name="Sprite2D4" type="Sprite2D" parent="."]
+position = Vector2(965, 544)
+scale = Vector2(1.99792, 2.24167)
+texture = ExtResource("4_cp0ys")
+
+[node name="EasyButton" type="Button" parent="."]
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 337.0
+offset_top = -62.0
+offset_right = 528.0
+offset_bottom = 62.0
+grow_vertical = 2
+theme_override_font_sizes/font_size = 50
+theme_override_styles/hover = SubResource("StyleBoxFlat_yhxw7")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_opfnp")
+theme_override_styles/normal = SubResource("StyleBoxFlat_trj04")
+text = "EASY"
+
+[node name="NormalButton" type="Button" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -95.5
+offset_top = -62.0
+offset_right = 95.5
+offset_bottom = 62.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 50
+theme_override_styles/hover = SubResource("StyleBoxFlat_16hvj")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_n45e2")
+theme_override_styles/normal = SubResource("StyleBoxFlat_vr1f0")
+text = "Normal"
+
+[node name="HardButton" type="Button" parent="."]
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -564.0
+offset_top = -62.0
+offset_right = -373.0
+offset_bottom = 62.0
+grow_horizontal = 0
+grow_vertical = 2
+theme_override_font_sizes/font_size = 50
+theme_override_styles/hover = SubResource("StyleBoxFlat_vtepg")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_cp0ys")
+theme_override_styles/normal = SubResource("StyleBoxFlat_8dnnj")
+text = "HARD
+"
+
+[node name="QuitButton" type="Button" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -95.5
+offset_top = 202.0
+offset_right = 95.5
+offset_bottom = 326.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 50
+theme_override_styles/hover = SubResource("StyleBoxFlat_t1dhk")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_n45e2")
+theme_override_styles/normal = SubResource("StyleBoxFlat_5egv6")
+text = "Quit"
+
+[node name="TitleLabel" type="Label" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -237.5
+offset_right = 20.0
+offset_bottom = -214.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 67
+text = "Adventure Platformer"
+
+[connection signal="pressed" from="EasyButton" to="." method="_on_easy_button_pressed"]
+[connection signal="pressed" from="NormalButton" to="." method="_on_normal_button_pressed"]
+[connection signal="pressed" from="HardButton" to="." method="_on_hard_button_pressed"]
+[connection signal="pressed" from="QuitButton" to="." method="_on_quit_button_pressed"]

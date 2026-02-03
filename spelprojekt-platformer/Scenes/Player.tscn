@@ -944,6 +944,7 @@ height = 64.0
 
 [node name="Player" type="CharacterBody2D"]
 collision_layer = 2
+collision_mask = 9
 floor_snap_length = 8.0
 safe_margin = 4.0
 script = ExtResource("1_i2e8t")
@@ -966,11 +967,42 @@ wait_time = 2.2
 one_shot = true
 
 [node name="Hitbox" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 4
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+[node name="SwordCollision" type="CollisionShape2D" parent="Hitbox"]
 position = Vector2(35, 0)
 shape = SubResource("CapsuleShape2D_i2e8t")
+disabled = true
 debug_color = Color(0.98852, 0, 0.301054, 0.42)
 
+[node name="HurtTimer" type="Timer" parent="."]
+wait_time = 0.25
+one_shot = true
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
+position = Vector2(1.99999, -12.5)
+scale = Vector2(18.4, 14.75)
+
+[node name="RemoteTransform2D" type="RemoteTransform2D" parent="."]
+
+[node name="LeftWallLower" type="RayCast2D" parent="."]
+position = Vector2(0, 12)
+target_position = Vector2(-42, 0)
+
+[node name="LeftWallUpper" type="RayCast2D" parent="."]
+position = Vector2(0, -12)
+target_position = Vector2(-42, 0)
+
+[node name="RightWallLower" type="RayCast2D" parent="."]
+position = Vector2(0, 12)
+target_position = Vector2(42, 0)
+
+[node name="RightWallUpper" type="RayCast2D" parent="."]
+position = Vector2(0, -12)
+target_position = Vector2(42, 0)
+
 [connection signal="timeout" from="Special_Attack_Cooldown" to="." method="_on_special_attack_cooldown_timeout"]
-[connection signal="area_entered" from="Hitbox" to="." method="_on_hitbox_area_entered"]
+[connection signal="body_entered" from="Hitbox" to="." method="_on_hitbox_body_entered"]
+[connection signal="timeout" from="HurtTimer" to="." method="_on_hurt_timer_timeout"]
+[connection signal="screen_exited" from="VisibleOnScreenNotifier2D" to="." method="_on_visible_on_screen_notifier_2d_screen_exited"]

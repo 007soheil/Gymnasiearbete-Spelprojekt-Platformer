@@ -6,9 +6,17 @@ const MAXIMUM_SPEED = 300
 const ACC = 2500
 const JUMP_VELOCITY = 600
 const GRAVITY = 1250
-const KNOCKBACK = 700
+const KNOCKBACK = 300
+const DAMAGE = 25
 
-enum {IDLE, WALK, JUMP, AIR, DEATH, ATTACK1, ATTACK2}
+const WALL_SLIDE_GRAVITY = 750
+const WALL_SLIDE_PUSH = 200
+
+const WALL_SLIDE_SPEED = 120
+const WALL_JUMP_FORCE_X = 420
+const WALL_JUMP_FORCE_Y = 650
+
+enum {IDLE, WALK, JUMP, AIR, DEATH, ATTACK1, ATTACK2, HURT, WALL}
 
 var state = IDLE
 var jump_buffer = 0.0
@@ -21,10 +29,21 @@ var is_falling: bool = false
 var can_special_attack: bool = true
 var can_jump: bool = true
 var health: int = 100
+var can_take_damage: bool = true
+var is_dead: bool = false
+var wall_direction := 0 # -1 = vänster vägg och 1 = höger vägg
+
+signal dead
 
 @onready var player: Sprite2D = $Sprite2D
 @onready var anim: AnimationPlayer = $AnimationPlayer
 @onready var specialattackcooldown: Timer = $Special_Attack_Cooldown
+@onready var sword: CollisionShape2D = $Hitbox/SwordCollision
+@onready var hurt_timer: Timer = $HurtTimer
+@onready var left_wall_lower_ray: RayCast2D = $LeftWallLower
+@onready var right_wall_lower_ray: RayCast2D = $RightWallLower
+@onready var left_wall_upper_ray: RayCast2D = $LeftWallUpper
+@onready var right_wall_upper_ray: RayCast2D = $RightWallUpper
 
 func _physics_process(delta: float) -> void:
 	match state:
@@ -42,7 +61,11 @@ func _physics_process(delta: float) -> void:
 			_attack1_state(delta)
 		ATTACK2:
 			_attack2_state(delta)
-	
+		HURT:
+			_hurt_state(delta)
+		WALL:
+			_wall_state(delta)
+	print(state)
 
 
 ##### GENERAL FUNCTIONS #####
@@ -54,14 +77,23 @@ func _movement(delta: float, input_x: float) -> void:
 		velocity.x = move_toward(velocity.x, 0, ACC*delta)
 			
 	velocity.y += GRAVITY * delta
-	apply_floor_snap()
+	#Undvika när man är vid vägg för smidighet
+	if is_on_floor():
+		apply_floor_snap()
+	
 	move_and_slide()
+	
+	if is_on_floor():
+		can_jump = true
+		coyote_timer = 0.0
 
 func _update_player_direction(input_x: float) -> void:
 	if input_x > 0:
 		player.flip_h = false
+		sword.position = Vector2(35, 0)
 	if input_x < 0:
 		player.flip_h = true
+		sword.position = Vector2(-35, 0)
 
 ##### STATE FUNCTIONS #####
 
@@ -108,7 +140,9 @@ func _walk_state(delta: float) -> void:
 		_enter_idle_state()
 	elif not is_on_floor():
 		_enter_jump_state(false)
-
+	
+	#elif is_on_wall() and not is_on_floor() and Input.get_axis("left", "right") != 0:
+		#_enter_wall_state()
 	
 func _jump_state(delta: float) -> void:
 
@@ -142,14 +176,21 @@ func _jump_state(delta: float) -> void:
 	#elif Input.is_action_just_pressed("attack"):
 		#_enter_attack1_state(true)
 	
+	#elif is_on_wall() and not is_on_floor() and Input.get_axis("left", "right") != 0:
+		#_enter_wall_state()
+	
 func _air_state(delta: float) -> void:
 	var input_x = Input.get_axis("left", "right")
 	_movement(delta, input_x)
 	_update_player_direction(input_x)
 	
+	if is_on_wall() and not is_on_floor() and (Input.is_action_pressed("left") or Input.is_action_pressed("right")):
+		_enter_wall_state()
+		return
+	
 	if not is_on_floor() and can_jump:
 		coyote_timer += delta
-		if coyote_timer > 1.0:
+		if coyote_timer > 0.2:
 			can_jump = false
 			coyote_timer = 0.0
 	
@@ -163,25 +204,35 @@ func _air_state(delta: float) -> void:
 		_enter_attack1_state(true)
 	elif Input.is_action_just_pressed("specialattack") and can_special_attack:
 		_enter_attack2_state(true)
+		
+	#elif is_on_wall() and not is_on_floor() and Input.get_axis("left", "right") != 0:
+		#_enter_wall_state()
+	#elif is_on_wall() and not is_on_floor():
+		#_enter_wall_state()
+		#return
 	
 func _death_state(delta: float) -> void:
-	pass
+	_movement(delta, 0)
 	
 func _attack1_state(delta: float) -> void:
 	var input_x = Input.get_axis("left", "right")
 	_movement(delta, input_x)
 	_update_player_direction(input_x)
+	sword.set_deferred("disabled", false)
 	
 	#före jump om man ska vänta tills attacken är klar
 	#if anim.is_playing(): #attackanimationen
 		#return
 	
 	if Input.is_action_just_pressed("jump") and is_on_floor():
+		sword.set_deferred("disabled", true)
 		_enter_jump_state(true)
 	
 	if anim.is_playing(): #väntar på attackanimationen
 		return
-		
+	
+	sword.set_deferred("disabled", true)
+	
 	if velocity.length() == 0:
 		_enter_idle_state()
 	if velocity.length() != 0 and not anim.is_playing():
@@ -191,17 +242,56 @@ func _attack2_state(delta: float) -> void:
 	var input_x = Input.get_axis("left", "right")
 	_movement(delta, input_x)
 	_update_player_direction(input_x)
+	sword.set_deferred("disabled", false)
 	
 	if Input.is_action_just_pressed("jump") and is_on_floor():
+		sword.set_deferred("disabled", true)
 		_enter_jump_state(true)
 		
 	if anim.is_playing():
 		return
 	
+	sword.set_deferred("disabled", true)
+	
 	if velocity.length() == 0:
 		_enter_idle_state()
 	if velocity.length() != 0 and not anim.is_playing():
 		_enter_walk_state()
+
+func _hurt_state(delta: float) -> void:
+	velocity.y += GRAVITY * delta
+	move_and_slide()
+	
+	if not anim.is_playing():
+		if is_on_floor():
+			if velocity.x == 0:
+				_enter_idle_state()
+			else:
+				_enter_walk_state()
+		else:
+			_enter_air_state(false)
+
+func _wall_state(delta: float) -> void:
+	var input_x = Input.get_axis("left", "right")
+	_update_player_direction(-wall_direction)
+	
+	#Lämna väggen om den inte nuddas eller trycks mot den
+	#if not is_on_wall() or input_x != wall_direction:
+	if not is_on_wall() and not left_wall_lower_ray.is_colliding() and not left_wall_upper_ray.is_colliding() and input_x != wall_direction or not is_on_wall() and not right_wall_lower_ray.is_colliding() and right_wall_upper_ray.is_colliding() and input_x != wall_direction or not left_wall_lower_ray.is_colliding() and not left_wall_upper_ray.is_colliding() and not right_wall_lower_ray.is_colliding() and not right_wall_upper_ray.is_colliding():
+		_enter_air_state(false)
+		return
+
+	#Kontrollerar wall slide hastighet
+	velocity.y = min(velocity.y + WALL_SLIDE_GRAVITY * delta, WALL_SLIDE_SPEED)
+	
+	#Wall jump
+	if Input.is_action_just_pressed("jump"):
+		velocity.y = -WALL_JUMP_FORCE_Y
+		velocity.x = -wall_direction * WALL_JUMP_FORCE_X
+		_enter_air_state(true)
+		return
+	
+	move_and_slide()
 
 ##### ENTER STATE FUNCTION #####
 func _enter_idle_state():
@@ -219,6 +309,8 @@ func _enter_jump_state(jumping: bool):
 	anim.play("jump")
 	pressed_jump = false
 	
+	can_jump = false
+	
 	if jumping:
 		velocity += JUMP_VELOCITY*up_direction
 
@@ -226,12 +318,20 @@ func _enter_air_state(jump):
 	state = AIR
 	anim.play("fall")
 	is_falling = true
-	if not jump:
-		can_jump = true
+
 	
 func _enter_death_state():
 	state = DEATH
 	anim.play("death")
+	if not is_dead:
+		is_dead = true
+		anim.play("fall")
+		$PlayerCollision.set_deferred("disabled", true)
+		$RemoteTransform2D.remote_path = ""
+		var tween = get_tree().create_tween()
+		tween.tween_property(self, "rotation", rotation + PI, 0.67)
+	
+	
 
 func _enter_attack1_state(attacking: bool):
 	state = ATTACK1
@@ -245,11 +345,58 @@ func _enter_attack2_state(attacking2: bool):
 		anim.play("attack3")
 		attacking2 = true
 		specialattackcooldown.start()
+		
+func _enter_hurt_state(from_position):
+	state = HURT
+	anim.play("hurt")
+	
+	sword.set_deferred("disabled", true)
+	
+	if from_position != null:
+		apply_knockback(from_position)
+	can_take_damage = false
+	hurt_timer.start()
+
+func _enter_wall_state():
+	if state == WALL:
+		return
+	
+	state = WALL
+	anim.play("wall_slide")
+	wall_direction = -get_wall_normal().x
+	velocity.x = 0
 
 
 func _on_special_attack_cooldown_timeout() -> void:
 	can_special_attack = true
 
+func _on_hitbox_body_entered(body: Node2D) -> void:
+	if body is Enemy:
+		body.apply_damage(DAMAGE, global_position)
 
-func _on_hitbox_area_entered(area: Area2D) -> void:
-	pass
+func apply_damage(amount: int, from_position):
+	if not can_take_damage:
+		return
+	if can_take_damage:
+		health -= amount
+		_enter_hurt_state(from_position)
+		var camera = get_tree().get_current_scene().get_node("Camera2D")
+		if camera:
+			camera.shake(10)
+
+	if health <= 0:
+		_enter_death_state()
+
+func apply_knockback(from_position: Vector2):
+	var knockback_direction = (global_position - from_position).normalized()
+	velocity.x = knockback_direction.x * KNOCKBACK
+	velocity.y = -200
+
+
+func _on_hurt_timer_timeout() -> void:
+	can_take_damage = true
+
+#Signal
+func _on_visible_on_screen_notifier_2d_screen_exited() -> void:
+	emit_signal("dead")
+	queue_free()
