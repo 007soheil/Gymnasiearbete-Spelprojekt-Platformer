@@ -1,10 +1,11 @@
-[gd_scene load_steps=17 format=3 uid="uid://cnrf6bu1v01a2"]
+[gd_scene load_steps=18 format=3 uid="uid://cnrf6bu1v01a2"]
 
 [ext_resource type="Texture2D" uid="uid://cyhqxtqmj6out" path="res://Sprites/Background and tiles/background1.png" id="1_ce3w2"]
 [ext_resource type="Script" uid="uid://dr54f08wj457o" path="res://Scripts/main_menu.gd" id="1_n45e2"]
 [ext_resource type="Texture2D" uid="uid://dpgr0haku2mqx" path="res://Sprites/Background and tiles/background2.png" id="2_n45e2"]
 [ext_resource type="Texture2D" uid="uid://35a6tnl4m6am" path="res://Sprites/Background and tiles/background3.png" id="3_opfnp"]
 [ext_resource type="Texture2D" uid="uid://c343e5oanjwap" path="res://Sprites/Background and tiles/background4b.png" id="4_cp0ys"]
+[ext_resource type="FontFile" uid="uid://copr0q3cp1e8a" path="res://Sprites/font.ttf" id="6_opfnp"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yhxw7"]
 bg_color = Color(0.486275, 0.486275, 0.486275, 0.690196)
@@ -115,6 +116,7 @@ offset_top = -62.0
 offset_right = 528.0
 offset_bottom = 62.0
 grow_vertical = 2
+theme_override_fonts/font = ExtResource("6_opfnp")
 theme_override_font_sizes/font_size = 50
 theme_override_styles/hover = SubResource("StyleBoxFlat_yhxw7")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_opfnp")
@@ -133,6 +135,7 @@ offset_right = 95.5
 offset_bottom = 62.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_fonts/font = ExtResource("6_opfnp")
 theme_override_font_sizes/font_size = 50
 theme_override_styles/hover = SubResource("StyleBoxFlat_16hvj")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_n45e2")
@@ -151,6 +154,7 @@ offset_right = -373.0
 offset_bottom = 62.0
 grow_horizontal = 0
 grow_vertical = 2
+theme_override_fonts/font = ExtResource("6_opfnp")
 theme_override_font_sizes/font_size = 50
 theme_override_styles/hover = SubResource("StyleBoxFlat_vtepg")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_cp0ys")
@@ -170,6 +174,7 @@ offset_right = 95.5
 offset_bottom = 326.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_fonts/font = ExtResource("6_opfnp")
 theme_override_font_sizes/font_size = 50
 theme_override_styles/hover = SubResource("StyleBoxFlat_t1dhk")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_n45e2")
@@ -188,6 +193,7 @@ offset_right = 20.0
 offset_bottom = -214.5
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_fonts/font = ExtResource("6_opfnp")
 theme_override_font_sizes/font_size = 67
 text = "Adventure Platformer"
 

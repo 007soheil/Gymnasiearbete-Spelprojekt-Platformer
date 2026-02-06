@@ -1,6 +1,6 @@
 extends Area2D
 
-class_name Blue_Gem
+#class_name Blue_Gem
 
 signal pickup
 

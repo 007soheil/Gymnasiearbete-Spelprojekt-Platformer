@@ -1,6 +1,71 @@
-[gd_scene load_steps=2 format=3 uid="uid://b7t8ewu1kl3pl"]
+[gd_scene load_steps=13 format=3 uid="uid://b7t8ewu1kl3pl"]
 
 [ext_resource type="Script" uid="uid://cxr05i5rvbj77" path="res://Scripts/victory_menu.gd" id="1_f1joo"]
+[ext_resource type="Texture2D" uid="uid://cwg1o0mam7adg" path="res://Sprites/Coin.png" id="2_fbmh8"]
+[ext_resource type="FontFile" uid="uid://copr0q3cp1e8a" path="res://Sprites/font.ttf" id="2_xdj7s"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_f1joo"]
+bg_color = Color(0.690196, 0.690196, 0.690196, 0.705882)
+corner_radius_top_left = 50
+corner_radius_top_right = 50
+corner_radius_bottom_right = 50
+corner_radius_bottom_left = 50
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fbmh8"]
+bg_color = Color(1, 1, 1, 0.705882)
+corner_radius_top_left = 50
+corner_radius_top_right = 50
+corner_radius_bottom_right = 50
+corner_radius_bottom_left = 50
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xdj7s"]
+bg_color = Color(0.0513665, 0.623158, 1, 0.705882)
+corner_radius_top_left = 50
+corner_radius_top_right = 50
+corner_radius_bottom_right = 50
+corner_radius_bottom_left = 50
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dffxu"]
+bg_color = Color(0.694118, 0.694118, 0.694118, 0.705882)
+corner_radius_top_left = 50
+corner_radius_top_right = 50
+corner_radius_bottom_right = 50
+corner_radius_bottom_left = 50
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mbqcv"]
+bg_color = Color(1, 1, 1, 0.705882)
+corner_radius_top_left = 50
+corner_radius_top_right = 50
+corner_radius_bottom_right = 50
+corner_radius_bottom_left = 50
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0105f"]
+bg_color = Color(0.992157, 0.337255, 0.388235, 0.705882)
+corner_radius_top_left = 50
+corner_radius_top_right = 50
+corner_radius_bottom_right = 50
+corner_radius_bottom_left = 50
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_b43hs"]
+bg_color = Color(0.694118, 0.694118, 0.694118, 0.705882)
+corner_radius_top_left = 35
+corner_radius_top_right = 35
+corner_radius_bottom_right = 35
+corner_radius_bottom_left = 35
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2xlt4"]
+bg_color = Color(1, 1, 1, 0.705882)
+corner_radius_top_left = 35
+corner_radius_top_right = 35
+corner_radius_bottom_right = 35
+corner_radius_bottom_left = 35
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kqmxk"]
+bg_color = Color(0, 0.705882, 0.517647, 0.705882)
+corner_radius_top_left = 35
+corner_radius_top_right = 35
+corner_radius_bottom_right = 35
+corner_radius_bottom_left = 35
 
 [node name="VictoryMenu" type="CanvasLayer"]
 script = ExtResource("1_f1joo")
@@ -14,20 +79,25 @@ color = Color(1, 1, 1, 0.298039)
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -386.0
-offset_top = 169.0
-offset_right = 363.0
-offset_bottom = 294.0
+offset_left = -685.0
+offset_top = 188.0
+offset_right = 737.0
+offset_bottom = 313.0
 grow_horizontal = 2
-theme_override_font_sizes/font_size = 90
+theme_override_fonts/font = ExtResource("2_xdj7s")
+theme_override_font_sizes/font_size = 100
 text = "Level Completed!"
 
 [node name="PerkUpgradeButton" type="Button" parent="."]
-offset_left = 482.0
+offset_left = 383.0
 offset_top = 360.0
-offset_right = 846.0
+offset_right = 931.0
 offset_bottom = 644.0
+theme_override_fonts/font = ExtResource("2_xdj7s")
 theme_override_font_sizes/font_size = 50
+theme_override_styles/hover = SubResource("StyleBoxFlat_f1joo")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_fbmh8")
+theme_override_styles/normal = SubResource("StyleBoxFlat_xdj7s")
 text = "PERK 1
 DASH
 10 COINS"
@@ -37,7 +107,11 @@ offset_left = 1087.0
 offset_top = 362.0
 offset_right = 1410.0
 offset_bottom = 646.0
+theme_override_fonts/font = ExtResource("2_xdj7s")
 theme_override_font_sizes/font_size = 50
+theme_override_styles/hover = SubResource("StyleBoxFlat_dffxu")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_mbqcv")
+theme_override_styles/normal = SubResource("StyleBoxFlat_0105f")
 text = "PERK 2
 DOUBLE JUMP
 15 COINS"
@@ -47,8 +121,26 @@ offset_left = 792.0
 offset_top = 694.0
 offset_right = 1146.0
 offset_bottom = 799.0
+theme_override_fonts/font = ExtResource("2_xdj7s")
 theme_override_font_sizes/font_size = 45
+theme_override_styles/hover = SubResource("StyleBoxFlat_b43hs")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_2xlt4")
+theme_override_styles/normal = SubResource("StyleBoxFlat_kqmxk")
 text = "ADVANCE"
+
+[node name="CoinAmount" type="Label" parent="."]
+offset_left = 894.0
+offset_top = 837.0
+offset_right = 1065.0
+offset_bottom = 906.0
+theme_override_fonts/font = ExtResource("2_xdj7s")
+theme_override_font_sizes/font_size = 50
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(844, 862)
+scale = Vector2(6, 6)
+texture = ExtResource("2_fbmh8")
+hframes = 14
 
 [connection signal="pressed" from="PerkUpgradeButton" to="." method="_on_perk_upgrade_button_pressed"]
 [connection signal="pressed" from="PerkUpgradeButton2" to="." method="_on_perk_upgrade_button_2_pressed"]

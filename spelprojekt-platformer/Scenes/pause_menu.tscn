@@ -1,6 +1,49 @@
-[gd_scene load_steps=2 format=3 uid="uid://bm6hlnyd02tym"]
+[gd_scene load_steps=9 format=3 uid="uid://bm6hlnyd02tym"]
 
 [ext_resource type="Script" uid="uid://cah224xy44msm" path="res://Scripts/pause_menu.gd" id="1_emv3i"]
+[ext_resource type="FontFile" uid="uid://copr0q3cp1e8a" path="res://Sprites/font.ttf" id="2_k0w1u"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_emv3i"]
+bg_color = Color(0.717647, 0.717647, 0.717647, 0.709804)
+corner_radius_top_left = 35
+corner_radius_top_right = 35
+corner_radius_bottom_right = 35
+corner_radius_bottom_left = 35
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_k0w1u"]
+bg_color = Color(1, 1, 1, 0.709804)
+corner_radius_top_left = 35
+corner_radius_top_right = 35
+corner_radius_bottom_right = 35
+corner_radius_bottom_left = 35
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1och7"]
+bg_color = Color(0.695432, 0.538266, 0.715868, 0.698039)
+corner_radius_top_left = 35
+corner_radius_top_right = 35
+corner_radius_bottom_right = 35
+corner_radius_bottom_left = 35
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bpi0q"]
+bg_color = Color(0.721569, 0.721569, 0.721569, 0.709804)
+corner_radius_top_left = 35
+corner_radius_top_right = 35
+corner_radius_bottom_right = 35
+corner_radius_bottom_left = 35
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vmyb1"]
+bg_color = Color(1, 1, 1, 0.705882)
+corner_radius_top_left = 35
+corner_radius_top_right = 35
+corner_radius_bottom_right = 35
+corner_radius_bottom_left = 35
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_myy0f"]
+bg_color = Color(0.788235, 0.529412, 0.384314, 0.705882)
+corner_radius_top_left = 35
+corner_radius_top_right = 35
+corner_radius_bottom_right = 35
+corner_radius_bottom_left = 35
 
 [node name="PauseMenu" type="CanvasLayer"]
 script = ExtResource("1_emv3i")
@@ -14,12 +57,13 @@ color = Color(1, 1, 1, 0.188235)
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -118.0
-offset_top = 279.0
-offset_right = 118.0
-offset_bottom = 371.0
+offset_left = -262.0
+offset_top = 280.0
+offset_right = 271.0
+offset_bottom = 372.0
 grow_horizontal = 2
-theme_override_font_sizes/font_size = 90
+theme_override_fonts/font = ExtResource("2_k0w1u")
+theme_override_font_sizes/font_size = 100
 text = "Paused"
 
 [node name="ResumeButton" type="Button" parent="."]
@@ -34,7 +78,11 @@ offset_right = 274.0
 offset_bottom = 88.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_fonts/font = ExtResource("2_k0w1u")
 theme_override_font_sizes/font_size = 50
+theme_override_styles/hover = SubResource("StyleBoxFlat_emv3i")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_k0w1u")
+theme_override_styles/normal = SubResource("StyleBoxFlat_1och7")
 text = "Resume Game"
 
 [node name="MainMenuButton" type="Button" parent="."]
@@ -43,13 +91,17 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -171.0
-offset_top = -387.0
-offset_right = 188.0
-offset_bottom = -277.0
+offset_left = -408.0
+offset_top = -398.0
+offset_right = 436.0
+offset_bottom = -288.0
 grow_horizontal = 2
 grow_vertical = 0
+theme_override_fonts/font = ExtResource("2_k0w1u")
 theme_override_font_sizes/font_size = 50
+theme_override_styles/hover = SubResource("StyleBoxFlat_bpi0q")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_vmyb1")
+theme_override_styles/normal = SubResource("StyleBoxFlat_myy0f")
 text = "Return To Main Menu"
 
 [connection signal="pressed" from="ResumeButton" to="." method="_on_resume_button_pressed"]

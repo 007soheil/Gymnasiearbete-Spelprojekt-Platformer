@@ -2,9 +2,14 @@ extends CanvasLayer
 
 signal advance_pressed
 
+@onready var coinamount_label: Label = $CoinAmount
+
 func _ready():
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	hide()
+	
+func coin():
+	coinamount_label.text = str(Globals.coins)
 
 
 
@@ -13,8 +18,12 @@ func _on_advance_button_pressed() -> void:
 
 
 func _on_perk_upgrade_button_pressed() -> void:
-	pass # Replace with function body.
+	if Globals.coins >= 10:
+		Globals.coins - 10
+	pass
 
 
 func _on_perk_upgrade_button_2_pressed() -> void:
-	pass # Replace with function body.
+	if Globals.coins >= 15:
+		Globals.coins - 15
+	pass

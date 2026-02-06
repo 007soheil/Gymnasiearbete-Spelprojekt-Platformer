@@ -9,8 +9,10 @@ const PLAYER_SCENE = preload("res://Scenes/Player.tscn")
 @onready var time_label: Label = $HUD/TimeLabel
 @onready var hearts_container: HBoxContainer = $HUD/HeartsContainer
 @onready var highscore_label: Label = $HUD/HighscoreLabel
+@onready var coincounter_label: Label = $HUD/CoinCounter
 @onready var coin: Area2D = $Coin
 @onready var blue_gem: Area2D = $BlueGem
+@onready var coin_cointainer: Node2D = $Coins
 
 var time: float = 0.0
 var level_completed: bool = false
@@ -22,7 +24,8 @@ func _ready() -> void:
 	_save_highscore(name)
 	player.get_node("RemoteTransform2D").remote_path = camera.get_path()
 	player.connect("dead", _on_player_dead)
-	coin.connect("pickup", _on_coin_pickup)
+	for child in coin_cointainer.get_children():
+		child.connect("pickup", _on_coin_pickup)
 	blue_gem.connect("pickup", _on_blue_gem_pickup)
 	$VictoryMenu.advance_pressed.connect(_on_victory_advance)
 	
@@ -41,6 +44,8 @@ func _process(delta: float) -> void:
 		
 		var time_string = _from_seconds_to_time(time)
 		time_label.text = "Time: " + time_string
+		
+		coincounter_label.text = str(Globals.coins)
 
 func _on_player_dead() -> void:
 	Globals.lives -= 1
@@ -60,13 +65,18 @@ func _on_coin_pickup():
 	
 func _on_blue_gem_pickup() -> void:
 	level_completed = true
+	#$VictoryMenu.coin()
+	#LevelManager.change_to_victory_menu()
+	
 	$VictoryMenu.visible = true
+	$VictoryMenu.coin()
+	
 	#get_tree().paused = true
 	
 	#LevelManager.change_to_next_level(level)
 	
 	if name in high_scores:
-		#Det finns ett bifintligt highscore
+		#Det finns ett befintligt highscore
 		if time < high_scores[name]:
 			_save_highscore(name)
 	else:

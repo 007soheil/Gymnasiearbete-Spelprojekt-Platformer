@@ -277,7 +277,7 @@ func _wall_state(delta: float) -> void:
 	
 	#Lämna väggen om den inte nuddas eller trycks mot den
 	#if not is_on_wall() or input_x != wall_direction:
-	if not is_on_wall() and not left_wall_lower_ray.is_colliding() and not left_wall_upper_ray.is_colliding() and input_x != wall_direction or not is_on_wall() and not right_wall_lower_ray.is_colliding() and right_wall_upper_ray.is_colliding() and input_x != wall_direction or not left_wall_lower_ray.is_colliding() and not left_wall_upper_ray.is_colliding() and not right_wall_lower_ray.is_colliding() and not right_wall_upper_ray.is_colliding():
+	if not is_on_wall() and not left_wall_lower_ray.is_colliding() and not left_wall_upper_ray.is_colliding() and input_x != wall_direction or not is_on_wall() and not right_wall_lower_ray.is_colliding() and not right_wall_upper_ray.is_colliding() and input_x != wall_direction or not left_wall_lower_ray.is_colliding() and not left_wall_upper_ray.is_colliding() and not right_wall_lower_ray.is_colliding() and not right_wall_upper_ray.is_colliding():
 		_enter_air_state(false)
 		return
 
@@ -289,6 +289,13 @@ func _wall_state(delta: float) -> void:
 		velocity.y = -WALL_JUMP_FORCE_Y
 		velocity.x = -wall_direction * WALL_JUMP_FORCE_X
 		_enter_air_state(true)
+		return
+	
+	if is_on_floor():
+		if abs(velocity.x) > 0:
+			_enter_walk_state()
+		else:
+			_enter_idle_state()
 		return
 	
 	move_and_slide()
