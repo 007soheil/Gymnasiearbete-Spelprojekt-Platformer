@@ -1,7 +1,8 @@
-[gd_scene load_steps=9 format=3 uid="uid://dq7gdprqybvfi"]
+[gd_scene load_steps=10 format=3 uid="uid://dq7gdprqybvfi"]
 
 [ext_resource type="Script" uid="uid://b5l7kq2i6dsl7" path="res://Scripts/gameover_menu.gd" id="1_360b7"]
 [ext_resource type="FontFile" uid="uid://copr0q3cp1e8a" path="res://Sprites/font.ttf" id="2_qw18a"]
+[ext_resource type="AudioStream" uid="uid://dyi25sgn1cef0" path="res://Audio/gameover.wav" id="3_jmoai"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_360b7"]
 bg_color = Color(0.705882, 0.705882, 0.705882, 0.705882)
@@ -85,6 +86,9 @@ offset_bottom = 438.0
 theme_override_fonts/font = ExtResource("2_qw18a")
 theme_override_font_sizes/font_size = 100
 text = "GAME OVER!"
+
+[node name="GameOverMenuMusic" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_jmoai")
 
 [connection signal="pressed" from="MainMenuButton" to="." method="_on_main_menu_button_pressed"]
 [connection signal="pressed" from="RestartButton" to="." method="_on_restart_button_pressed"]

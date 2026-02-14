@@ -1,6 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://b2a8evefegf3d"]
+[gd_scene load_steps=7 format=3 uid="uid://b2a8evefegf3d"]
 
 [ext_resource type="Script" uid="uid://coes4thullrjy" path="res://Scripts/level_manager.gd" id="1_f6wcy"]
+[ext_resource type="PackedScene" uid="uid://bm6hlnyd02tym" path="res://Scenes/pause_menu.tscn" id="2_83v1d"]
 
 [sub_resource type="Animation" id="Animation_83v1d"]
 length = 0.001
@@ -77,3 +78,6 @@ color = Color(0, 0, 0, 0)
 libraries = {
 &"": SubResource("AnimationLibrary_83v1d")
 }
+
+[node name="PauseMenu" parent="." instance=ExtResource("2_83v1d")]
+visible = false

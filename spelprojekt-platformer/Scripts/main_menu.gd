@@ -1,11 +1,13 @@
 extends CanvasLayer
 
+@onready var MainMenuMusic: AudioStreamPlayer = $MainMenuMusic
+
 func _ready():
+	$MainMenuMusic.play()
 	get_tree().paused = false
 
 
 func _on_easy_button_pressed() -> void:
-	print("start game")
 	Globals.difficulty = Globals.Difficulty.EASY
 	LevelManager.start_new_game()
 

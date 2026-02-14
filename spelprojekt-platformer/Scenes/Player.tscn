@@ -1,4 +1,4 @@
-[gd_scene load_steps=49 format=3 uid="uid://b8tgqgf7qts56"]
+[gd_scene load_steps=51 format=3 uid="uid://b8tgqgf7qts56"]
 
 [ext_resource type="Script" uid="uid://c5b4ambj1vlb6" path="res://Scripts/player.gd" id="1_i2e8t"]
 [ext_resource type="Texture2D" uid="uid://dkmo1j5haml4s" path="res://Sprites/Character sprites/male_hero-design.png" id="1_rpqav"]
@@ -23,6 +23,8 @@
 [ext_resource type="Texture2D" uid="uid://flnlmqddxjie" path="res://Sprites/Character sprites/male_hero-walk_turn.png" id="20_x63xi"]
 [ext_resource type="Texture2D" uid="uid://bukpxvwuea35q" path="res://Sprites/Character sprites/male_hero-run_turn.png" id="21_i2e8t"]
 [ext_resource type="Texture2D" uid="uid://c3q6tfn6wvg6y" path="res://Sprites/Character sprites/male_hero-run_to_idle.png" id="22_x63xi"]
+[ext_resource type="AudioStream" uid="uid://dummw45mco8wg" path="res://Audio/melee sound.wav" id="24_qidb7"]
+[ext_resource type="AudioStream" uid="uid://c5a4o508kl5hm" path="res://Audio/hurt.wav" id="25_70hv0"]
 
 [sub_resource type="Animation" id="Animation_dewec"]
 length = 0.001
@@ -1002,7 +1004,17 @@ target_position = Vector2(42, 0)
 position = Vector2(0, -12)
 target_position = Vector2(42, 0)
 
+[node name="DashCooldown" type="Timer" parent="."]
+wait_time = 0.5
+
+[node name="SwordSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("24_qidb7")
+
+[node name="HurtSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("25_70hv0")
+
 [connection signal="timeout" from="Special_Attack_Cooldown" to="." method="_on_special_attack_cooldown_timeout"]
 [connection signal="body_entered" from="Hitbox" to="." method="_on_hitbox_body_entered"]
 [connection signal="timeout" from="HurtTimer" to="." method="_on_hurt_timer_timeout"]
 [connection signal="screen_exited" from="VisibleOnScreenNotifier2D" to="." method="_on_visible_on_screen_notifier_2d_screen_exited"]
+[connection signal="timeout" from="DashCooldown" to="." method="_on_dash_cooldown_timeout"]

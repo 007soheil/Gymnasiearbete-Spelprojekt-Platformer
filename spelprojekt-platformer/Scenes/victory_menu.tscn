@@ -1,8 +1,10 @@
-[gd_scene load_steps=13 format=3 uid="uid://b7t8ewu1kl3pl"]
+[gd_scene load_steps=15 format=3 uid="uid://b7t8ewu1kl3pl"]
 
 [ext_resource type="Script" uid="uid://cxr05i5rvbj77" path="res://Scripts/victory_menu.gd" id="1_f1joo"]
 [ext_resource type="Texture2D" uid="uid://cwg1o0mam7adg" path="res://Sprites/Coin.png" id="2_fbmh8"]
 [ext_resource type="FontFile" uid="uid://copr0q3cp1e8a" path="res://Sprites/font.ttf" id="2_xdj7s"]
+[ext_resource type="AudioStream" uid="uid://mswrju2aweai" path="res://Audio/Upgrade.mp3" id="4_dffxu"]
+[ext_resource type="AudioStream" uid="uid://btf6txdgem2y" path="res://Audio/MenuMusic.mp3" id="5_mbqcv"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_f1joo"]
 bg_color = Color(0.690196, 0.690196, 0.690196, 0.705882)
@@ -141,6 +143,13 @@ position = Vector2(844, 862)
 scale = Vector2(6, 6)
 texture = ExtResource("2_fbmh8")
 hframes = 14
+
+[node name="UpgradeSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_dffxu")
+
+[node name="VictoryMenuMusic" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_mbqcv")
+parameters/looping = false
 
 [connection signal="pressed" from="PerkUpgradeButton" to="." method="_on_perk_upgrade_button_pressed"]
 [connection signal="pressed" from="PerkUpgradeButton2" to="." method="_on_perk_upgrade_button_2_pressed"]

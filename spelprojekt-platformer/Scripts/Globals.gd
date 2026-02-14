@@ -7,6 +7,9 @@ var difficulty := Difficulty.NORMAL
 var lives = 3
 var coins = 0
 
+var dash_unlocked := false
+var double_jump_unlocked := false
+
 func apply_difficulty_settings():
 	match difficulty:
 		Difficulty.EASY:

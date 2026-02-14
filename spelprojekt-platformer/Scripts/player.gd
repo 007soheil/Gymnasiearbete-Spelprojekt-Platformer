@@ -8,6 +8,11 @@ const JUMP_VELOCITY = 600
 const GRAVITY = 1250
 const KNOCKBACK = 300
 const DAMAGE = 25
+const EXTRA_JUMPS_LOCKED = 0
+const EXTRA_JUMPS_UNLOCKED = 1
+const DASH_SPEED = 700
+const DASH_TIME = 0.15
+
 
 const WALL_SLIDE_GRAVITY = 750
 const WALL_SLIDE_PUSH = 200
@@ -16,13 +21,13 @@ const WALL_SLIDE_SPEED = 120
 const WALL_JUMP_FORCE_X = 420
 const WALL_JUMP_FORCE_Y = 650
 
-enum {IDLE, WALK, JUMP, AIR, DEATH, ATTACK1, ATTACK2, HURT, WALL}
+enum {IDLE, WALK, JUMP, AIR, DEATH, ATTACK1, ATTACK2, HURT, WALL, DASH}
 
 var state = IDLE
 var jump_buffer = 0.0
 var coyote_timer = 0.0
 var pressed_jump: bool = false
-var has_jumped: bool = false
+#var has_jumped: bool = false
 var attacking: bool = false
 var attacking2: bool = false
 var is_falling: bool = false
@@ -32,6 +37,13 @@ var health: int = 100
 var can_take_damage: bool = true
 var is_dead: bool = false
 var wall_direction := 0 # -1 = vänster vägg och 1 = höger vägg
+var double_jump_unlocked: bool = false
+var jumps_left: int = 0
+var dash_unlocked: bool = false
+var dash_timer: float = 0.0
+var dash_direction := 0
+var can_dash = true
+
 
 signal dead
 
@@ -44,6 +56,8 @@ signal dead
 @onready var right_wall_lower_ray: RayCast2D = $RightWallLower
 @onready var left_wall_upper_ray: RayCast2D = $LeftWallUpper
 @onready var right_wall_upper_ray: RayCast2D = $RightWallUpper
+@onready var dash_cooldown: Timer = $DashCooldown
+
 
 func _physics_process(delta: float) -> void:
 	match state:
@@ -65,8 +79,14 @@ func _physics_process(delta: float) -> void:
 			_hurt_state(delta)
 		WALL:
 			_wall_state(delta)
+		DASH:
+			_dash_state(delta)
 	print(state)
 
+#Kontrollerar i början för att se om man har låst upp någon perk
+func _ready():
+	dash_unlocked = Globals.dash_unlocked
+	double_jump_unlocked = Globals.double_jump_unlocked
 
 ##### GENERAL FUNCTIONS #####
 
@@ -84,6 +104,7 @@ func _movement(delta: float, input_x: float) -> void:
 	move_and_slide()
 	
 	if is_on_floor():
+		jumps_left = EXTRA_JUMPS_UNLOCKED if double_jump_unlocked else EXTRA_JUMPS_LOCKED
 		can_jump = true
 		coyote_timer = 0.0
 
@@ -94,6 +115,14 @@ func _update_player_direction(input_x: float) -> void:
 	if input_x < 0:
 		player.flip_h = true
 		sword.position = Vector2(-35, 0)
+
+func _get_dash_direction(input_x: float) -> int:
+	if input_x != 0:
+		_update_player_direction(input_x)
+		return sign(input_x)
+	
+	#Ifall man inte går så dashar man åt det håll man tittar
+	return -1 if player.flip_h else 1
 
 ##### STATE FUNCTIONS #####
 
@@ -118,6 +147,9 @@ func _idle_state(delta: float) -> void:
 	if velocity.length() > 0 and state != JUMP and is_on_floor():
 		_enter_walk_state()
 
+	if Input.is_action_just_pressed("dash") and can_dash:
+		dash_direction = _get_dash_direction(input_x)
+		_enter_dash_state()
 	
 func _walk_state(delta: float) -> void:
 	var input_x = Input.get_axis("left", "right")
@@ -140,12 +172,16 @@ func _walk_state(delta: float) -> void:
 		_enter_idle_state()
 	elif not is_on_floor():
 		_enter_jump_state(false)
+		
+	if Input.is_action_just_pressed("dash") and can_dash:
+		dash_direction = _get_dash_direction(input_x)
+		_enter_dash_state()
 	
 	#elif is_on_wall() and not is_on_floor() and Input.get_axis("left", "right") != 0:
 		#_enter_wall_state()
 	
 func _jump_state(delta: float) -> void:
-
+	
 	if Input.is_action_just_pressed("jump"):
 		pressed_jump = true
 	var input_x = Input.get_axis("left", "right")
@@ -153,13 +189,12 @@ func _jump_state(delta: float) -> void:
 
 	_movement(delta, input_x)
 	
-	
 	if pressed_jump:
 		jump_buffer += delta
 		if jump_buffer > 0.1:
 			pressed_jump = false
 			jump_buffer = 0.0
-
+	
 
 	if Input.is_action_just_pressed("attack"):
 		_enter_attack1_state(true)
@@ -180,6 +215,8 @@ func _jump_state(delta: float) -> void:
 		#_enter_wall_state()
 	
 func _air_state(delta: float) -> void:
+	if state != AIR: ###
+		coyote_timer = 0.0
 	var input_x = Input.get_axis("left", "right")
 	_movement(delta, input_x)
 	_update_player_direction(input_x)
@@ -194,8 +231,16 @@ func _air_state(delta: float) -> void:
 			can_jump = false
 			coyote_timer = 0.0
 	
-	if Input.is_action_just_pressed("jump") and can_jump:
-		_enter_jump_state(true)
+	if Input.is_action_just_pressed("jump"):
+		#För coyote jump
+		if can_jump:
+			_enter_jump_state(true)
+			return
+		#För dubbelhopp
+		elif jumps_left > 0:
+			_enter_jump_state(true)
+			return
+	
 	elif velocity.length() == 0:
 		_enter_idle_state()
 	elif velocity.length() != 0 and is_on_floor():
@@ -204,6 +249,10 @@ func _air_state(delta: float) -> void:
 		_enter_attack1_state(true)
 	elif Input.is_action_just_pressed("specialattack") and can_special_attack:
 		_enter_attack2_state(true)
+		
+	if Input.is_action_just_pressed("dash") and can_dash:
+		dash_direction = _get_dash_direction(input_x)
+		_enter_dash_state()
 		
 	#elif is_on_wall() and not is_on_floor() and Input.get_axis("left", "right") != 0:
 		#_enter_wall_state()
@@ -286,8 +335,19 @@ func _wall_state(delta: float) -> void:
 	
 	#Wall jump
 	if Input.is_action_just_pressed("jump"):
+		"""
+		if jumps_left <= 0:
+			return
+		jumps_left -= 1
+		"""
 		velocity.y = -WALL_JUMP_FORCE_Y
 		velocity.x = -wall_direction * WALL_JUMP_FORCE_X
+		
+		can_jump = false
+		coyote_timer = 0.0
+		
+		jumps_left = EXTRA_JUMPS_UNLOCKED if double_jump_unlocked else EXTRA_JUMPS_LOCKED
+		
 		_enter_air_state(true)
 		return
 	
@@ -299,6 +359,19 @@ func _wall_state(delta: float) -> void:
 		return
 	
 	move_and_slide()
+
+func _dash_state(delta: float) -> void:
+	dash_timer -= delta
+	
+	velocity.y = 0
+	velocity.x = DASH_SPEED * dash_direction
+	move_and_slide()
+	
+	if dash_timer <= 0:
+		if is_on_floor():
+			_enter_idle_state()
+		else:
+			_enter_air_state(false)
 
 ##### ENTER STATE FUNCTION #####
 func _enter_idle_state():
@@ -312,14 +385,23 @@ func _enter_walk_state(): #nya _run_state
 	
 	
 func _enter_jump_state(jumping: bool):
+	
 	state = JUMP
 	anim.play("jump")
 	pressed_jump = false
 	
+	#Använder extrahoppet endast om man inte använder coyote
+	if not can_jump:
+		if jumps_left <= 0:
+			return
+		jumps_left -= 1
+	
 	can_jump = false
+	coyote_timer = 0.0
 	
 	if jumping:
-		velocity += JUMP_VELOCITY*up_direction
+		velocity.y = -JUMP_VELOCITY
+
 
 func _enter_air_state(jump):
 	state = AIR
@@ -344,6 +426,7 @@ func _enter_attack1_state(attacking: bool):
 	state = ATTACK1
 	anim.play("attack2")
 	attacking = true
+	$SwordSound.play()
 	
 func _enter_attack2_state(attacking2: bool):
 	if can_special_attack:
@@ -356,6 +439,7 @@ func _enter_attack2_state(attacking2: bool):
 func _enter_hurt_state(from_position):
 	state = HURT
 	anim.play("hurt")
+	$HurtSound.play()
 	
 	sword.set_deferred("disabled", true)
 	
@@ -372,7 +456,21 @@ func _enter_wall_state():
 	anim.play("wall_slide")
 	wall_direction = -get_wall_normal().x
 	velocity.x = 0
+	
+	jumps_left = EXTRA_JUMPS_UNLOCKED if double_jump_unlocked else EXTRA_JUMPS_LOCKED
 
+func _enter_dash_state():
+	if not dash_unlocked:
+		return
+	
+	state = DASH
+	anim.play("dash")
+	dash_timer = DASH_TIME
+	can_dash = false
+	dash_cooldown.start()
+	
+	velocity.y = 0
+	velocity.x = dash_direction * DASH_SPEED
 
 func _on_special_attack_cooldown_timeout() -> void:
 	can_special_attack = true
@@ -407,3 +505,7 @@ func _on_hurt_timer_timeout() -> void:
 func _on_visible_on_screen_notifier_2d_screen_exited() -> void:
 	emit_signal("dead")
 	queue_free()
+
+
+func _on_dash_cooldown_timeout() -> void:
+	can_dash = true

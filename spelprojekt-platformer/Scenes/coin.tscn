@@ -1,7 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://fiykasp6myup"]
+[gd_scene load_steps=9 format=3 uid="uid://fiykasp6myup"]
 
 [ext_resource type="Script" uid="uid://b4rmu8a2fse6g" path="res://Scripts/coin.gd" id="1_2qo34"]
 [ext_resource type="Texture2D" uid="uid://cwg1o0mam7adg" path="res://Sprites/Coin.png" id="2_jgi06"]
+[ext_resource type="AudioStream" uid="uid://qyuy7to0ihni" path="res://Audio/Coin.wav" id="3_g537i"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_jgi06"]
 radius = 5.0
@@ -198,5 +199,8 @@ shape = SubResource("CircleShape2D_jgi06")
 libraries = {
 &"": SubResource("AnimationLibrary_h2p6v")
 }
+
+[node name="CoinPickup" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_g537i")
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]

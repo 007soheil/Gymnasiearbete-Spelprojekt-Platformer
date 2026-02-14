@@ -13,6 +13,11 @@ const PLAYER_SCENE = preload("res://Scenes/Player.tscn")
 @onready var coin: Area2D = $Coin
 @onready var blue_gem: Area2D = $BlueGem
 @onready var coin_cointainer: Node2D = $Coins
+@onready var yellow_gem: Area2D = $YellowGem
+@onready var gray_gem: Area2D = $GrayGem
+@onready var green_gem: Area2D = $GreenGem
+@onready var red_gem: Area2D = $RedGem
+
 
 var time: float = 0.0
 var level_completed: bool = false
@@ -21,12 +26,18 @@ var high_scores: Dictionary = {}
 @export var level = 1
 
 func _ready() -> void:
+	$MainMenu.MainMenuMusic.stop()
+	$BackgroundMusic.play()
 	_save_highscore(name)
 	player.get_node("RemoteTransform2D").remote_path = camera.get_path()
 	player.connect("dead", _on_player_dead)
 	for child in coin_cointainer.get_children():
 		child.connect("pickup", _on_coin_pickup)
-	blue_gem.connect("pickup", _on_blue_gem_pickup)
+	blue_gem.connect("pickup", _on_gem_pickup)
+	yellow_gem.connect("pickup", _on_gem_pickup)
+	gray_gem.connect("pickup", _on_gem_pickup)
+	green_gem.connect("pickup", _on_gem_pickup)
+	red_gem.connect("pickup", _on_gem_pickup)
 	$VictoryMenu.advance_pressed.connect(_on_victory_advance)
 	
 	_update_heart_amount()
@@ -38,6 +49,7 @@ func _ready() -> void:
 	
 	print(high_scores)
 	
+
 func _process(delta: float) -> void:
 	if not level_completed:
 		time += delta
@@ -58,20 +70,22 @@ func _on_player_dead() -> void:
 		player.connect("dead", _on_player_dead)
 	else:
 		$GameOverMenu.visible = true
+		$GameOverMenu.GameOverMenuMusic.play()
+		$BackgroundMusic.stop()
 
 
 func _on_coin_pickup():
 	Globals.coins += 1
 	
-func _on_blue_gem_pickup() -> void:
+func _on_gem_pickup() -> void:
 	level_completed = true
-	#$VictoryMenu.coin()
+	
 	#LevelManager.change_to_victory_menu()
 	
 	$VictoryMenu.visible = true
-	$VictoryMenu.coin()
-	
-	#get_tree().paused = true
+	$VictoryMenu.VictoryMenuMusic.play()
+	$BackgroundMusic.stop()
+	get_tree().paused = true
 	
 	#LevelManager.change_to_next_level(level)
 	
@@ -114,3 +128,4 @@ func _from_seconds_to_time(seconds: float) -> String:
 func _on_victory_advance():
 	get_tree().paused = false
 	LevelManager.change_to_next_level(level)
+	$VictoryMenu.VictoryMenuMusic.stop()

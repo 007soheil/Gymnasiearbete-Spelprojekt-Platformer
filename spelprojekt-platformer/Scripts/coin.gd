@@ -13,6 +13,8 @@ func _on_body_entered(body: Node2D) -> void:
 	if is_collected:
 		return
 	if body is Player:
+		$CoinPickup.play()
+		$CollisionShape2D.set_deferred("disabled", true)
 		emit_signal("pickup")
 		$AnimationPlayer.play("pickup")
 		await $AnimationPlayer.animation_finished
