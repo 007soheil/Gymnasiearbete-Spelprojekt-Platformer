@@ -8,6 +8,8 @@ const VICTORY_MENU = "res://Scenes/victory_menu.tscn"
 var level_1 = preload("res://Scenes/level.tscn")
 var is_paused: bool = false
 
+
+
 func change_to_next_level(current_level: int) -> void:
 	$AnimationPlayer.play("fade_in")
 	await $AnimationPlayer.animation_finished
@@ -17,6 +19,7 @@ func change_to_next_level(current_level: int) -> void:
 		get_tree().change_scene_to_file("res://Scenes/level_1.tscn")
 	$AnimationPlayer.play("fade_out")
 
+	
 func change_to_victory_menu() -> void: #Har för tillfället detta i level-script
 	$AnimationPlayer.play("fade_in")
 	await $AnimationPlayer.animation_finished
@@ -24,16 +27,25 @@ func change_to_victory_menu() -> void: #Har för tillfället detta i level-scrip
 	$AnimationPlayer.play("fade_out")
 	$VictoryMenu.VictoryMenuMusic.play()
 
-	
+
 func restart_from_level_1() -> void:
+	#Nollställa perks
+	var dash_unlocked := false
+	var double_jump_unlocked := false
+	
 	Globals.apply_difficulty_settings()
 	Globals.coins = 0
 	$AnimationPlayer.play("fade_in")
 	await $AnimationPlayer.animation_finished
 	get_tree().change_scene_to_file(LEVEL_PATH + str(1) + ".tscn")
 	$AnimationPlayer.play("fade_out")
-	
+
+
 func start_new_game():
+	#Nollställa perks
+	var dash_unlocked := false
+	var double_jump_unlocked := false
+
 	Globals.apply_difficulty_settings()
 	Globals.coins = 0
 	$AnimationPlayer.play("fade_in")
@@ -59,4 +71,5 @@ func toggle_pause():
 	is_paused = !is_paused
 	get_tree().paused = is_paused
 	$PauseMenu.visible = is_paused
-	$PauseMenu.PauseMenuMusic.play()
+	if is_paused:
+		$PauseMenu.PauseMenuMusic.play()

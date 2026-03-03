@@ -5,7 +5,7 @@
 [ext_resource type="AudioStream" uid="uid://qyuy7to0ihni" path="res://Audio/Coin.wav" id="3_g537i"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_jgi06"]
-radius = 5.0
+radius = 6.5192
 
 [sub_resource type="Animation" id="Animation_h2p6v"]
 length = 0.001

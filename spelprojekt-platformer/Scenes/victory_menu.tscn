@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://cwg1o0mam7adg" path="res://Sprites/Coin.png" id="2_fbmh8"]
 [ext_resource type="FontFile" uid="uid://copr0q3cp1e8a" path="res://Sprites/font.ttf" id="2_xdj7s"]
 [ext_resource type="AudioStream" uid="uid://mswrju2aweai" path="res://Audio/Upgrade.mp3" id="4_dffxu"]
-[ext_resource type="AudioStream" uid="uid://btf6txdgem2y" path="res://Audio/MenuMusic.mp3" id="5_mbqcv"]
+[ext_resource type="AudioStream" uid="uid://imvtntnjbdvn" path="res://Audio/Victory!.wav" id="5_mbqcv"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_f1joo"]
 bg_color = Color(0.690196, 0.690196, 0.690196, 0.705882)
@@ -149,7 +149,7 @@ stream = ExtResource("4_dffxu")
 
 [node name="VictoryMenuMusic" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("5_mbqcv")
-parameters/looping = false
+volume_db = 8.0
 
 [connection signal="pressed" from="PerkUpgradeButton" to="." method="_on_perk_upgrade_button_pressed"]
 [connection signal="pressed" from="PerkUpgradeButton2" to="." method="_on_perk_upgrade_button_2_pressed"]

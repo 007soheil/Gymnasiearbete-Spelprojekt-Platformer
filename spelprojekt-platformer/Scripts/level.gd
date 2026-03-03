@@ -80,6 +80,8 @@ func _on_coin_pickup():
 func _on_gem_pickup() -> void:
 	level_completed = true
 	
+	coincounter_label.visible = false
+	
 	#LevelManager.change_to_victory_menu()
 	
 	$VictoryMenu.visible = true

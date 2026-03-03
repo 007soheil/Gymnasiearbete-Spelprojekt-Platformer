@@ -51,12 +51,16 @@ signal dead
 @onready var anim: AnimationPlayer = $AnimationPlayer
 @onready var specialattackcooldown: Timer = $Special_Attack_Cooldown
 @onready var sword: CollisionShape2D = $Hitbox/SwordCollision
+@onready var sword_up: CollisionShape2D = $Hitbox/SwordCollision2
+@onready var sword_up_sides: CollisionShape2D = $Hitbox/SwordCollision3
 @onready var hurt_timer: Timer = $HurtTimer
 @onready var left_wall_lower_ray: RayCast2D = $LeftWallLower
 @onready var right_wall_lower_ray: RayCast2D = $RightWallLower
 @onready var left_wall_upper_ray: RayCast2D = $LeftWallUpper
 @onready var right_wall_upper_ray: RayCast2D = $RightWallUpper
 @onready var dash_cooldown: Timer = $DashCooldown
+@onready var health_bar: ProgressBar = get_tree().get_current_scene().get_node("CanvasLayer/Control/HealthBar")
+@onready var blink_timer: Timer = $BlinkTimer
 
 
 func _physics_process(delta: float) -> void:
@@ -87,6 +91,8 @@ func _physics_process(delta: float) -> void:
 func _ready():
 	dash_unlocked = Globals.dash_unlocked
 	double_jump_unlocked = Globals.double_jump_unlocked
+	health = 100
+	health_bar.value = health
 
 ##### GENERAL FUNCTIONS #####
 
@@ -112,9 +118,11 @@ func _update_player_direction(input_x: float) -> void:
 	if input_x > 0:
 		player.flip_h = false
 		sword.position = Vector2(35, 0)
+		sword_up_sides.position = Vector2(35, -36)
 	if input_x < 0:
 		player.flip_h = true
 		sword.position = Vector2(-35, 0)
+		sword_up_sides.position = Vector2(-35, -36)
 
 func _get_dash_direction(input_x: float) -> int:
 	if input_x != 0:
@@ -195,7 +203,10 @@ func _jump_state(delta: float) -> void:
 			pressed_jump = false
 			jump_buffer = 0.0
 	
-
+	if Input.is_action_just_pressed("dash") and can_dash:
+		dash_direction = _get_dash_direction(input_x)
+		_enter_dash_state()
+		return
 	if Input.is_action_just_pressed("attack"):
 		_enter_attack1_state(true)
 	if Input.is_action_just_pressed("specialattack") and can_special_attack:
@@ -215,7 +226,7 @@ func _jump_state(delta: float) -> void:
 		#_enter_wall_state()
 	
 func _air_state(delta: float) -> void:
-	if state != AIR: ###
+	if state != AIR:
 		coyote_timer = 0.0
 	var input_x = Input.get_axis("left", "right")
 	_movement(delta, input_x)
@@ -242,8 +253,10 @@ func _air_state(delta: float) -> void:
 			return
 	
 	elif velocity.length() == 0:
+		$JumpLandingSound.play()
 		_enter_idle_state()
 	elif velocity.length() != 0 and is_on_floor():
+		$JumpLandingSound.play()
 		_enter_walk_state()
 	elif Input.is_action_just_pressed("attack"):
 		_enter_attack1_state(true)
@@ -292,15 +305,21 @@ func _attack2_state(delta: float) -> void:
 	_movement(delta, input_x)
 	_update_player_direction(input_x)
 	sword.set_deferred("disabled", false)
+	sword_up.set_deferred("disabled", false)
+	sword_up_sides.set_deferred("disabled", false)
 	
 	if Input.is_action_just_pressed("jump") and is_on_floor():
 		sword.set_deferred("disabled", true)
+		sword_up.set_deferred("disabled", true)
+		sword_up_sides.set_deferred("disabled", true)
 		_enter_jump_state(true)
 		
 	if anim.is_playing():
 		return
 	
 	sword.set_deferred("disabled", true)
+	sword_up.set_deferred("disabled", true)
+	sword_up_sides.set_deferred("disabled", true)
 	
 	if velocity.length() == 0:
 		_enter_idle_state()
@@ -342,7 +361,7 @@ func _wall_state(delta: float) -> void:
 		"""
 		velocity.y = -WALL_JUMP_FORCE_Y
 		velocity.x = -wall_direction * WALL_JUMP_FORCE_X
-		
+		$JumpSound.play()
 		can_jump = false
 		coyote_timer = 0.0
 		
@@ -389,6 +408,7 @@ func _enter_jump_state(jumping: bool):
 	state = JUMP
 	anim.play("jump")
 	pressed_jump = false
+	$JumpSound.play()
 	
 	#Använder extrahoppet endast om man inte använder coyote
 	if not can_jump:
@@ -412,6 +432,13 @@ func _enter_air_state(jump):
 func _enter_death_state():
 	state = DEATH
 	anim.play("death")
+	$DeathSound.play()
+	
+	#Avsluta blinkningen
+	can_take_damage = true
+	blink_timer.stop()
+	player.visible = true
+	
 	if not is_dead:
 		is_dead = true
 		anim.play("fall")
@@ -442,11 +469,15 @@ func _enter_hurt_state(from_position):
 	$HurtSound.play()
 	
 	sword.set_deferred("disabled", true)
+	sword_up.set_deferred("disabled", true)
+	sword_up_sides.set_deferred("disabled", true)
 	
 	if from_position != null:
 		apply_knockback(from_position)
+	
 	can_take_damage = false
 	hurt_timer.start()
+	blink_timer.start()
 
 func _enter_wall_state():
 	if state == WALL:
@@ -482,8 +513,11 @@ func _on_hitbox_body_entered(body: Node2D) -> void:
 func apply_damage(amount: int, from_position):
 	if not can_take_damage:
 		return
+	
 	if can_take_damage:
 		health -= amount
+		health = clamp(health, 0, 100)
+		health_bar.value = health #Uppdaterar health bar
 		_enter_hurt_state(from_position)
 		var camera = get_tree().get_current_scene().get_node("Camera2D")
 		if camera:
@@ -497,11 +531,13 @@ func apply_knockback(from_position: Vector2):
 	velocity.x = knockback_direction.x * KNOCKBACK
 	velocity.y = -200
 
-
+#### SIGNALS ####
 func _on_hurt_timer_timeout() -> void:
 	can_take_damage = true
+	player.visible = true
+	blink_timer.stop()
 
-#Signal
+
 func _on_visible_on_screen_notifier_2d_screen_exited() -> void:
 	emit_signal("dead")
 	queue_free()
@@ -509,3 +545,8 @@ func _on_visible_on_screen_notifier_2d_screen_exited() -> void:
 
 func _on_dash_cooldown_timeout() -> void:
 	can_dash = true
+
+
+func _on_blink_timer_timeout() -> void:
+	player.visible = !player.visible
+	

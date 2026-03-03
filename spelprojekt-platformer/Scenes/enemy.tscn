@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://b286xyb1jtabw"]
+[gd_scene load_steps=19 format=3 uid="uid://b286xyb1jtabw"]
 
 [ext_resource type="Script" uid="uid://b0ts03df6rp5j" path="res://Scripts/enemy.gd" id="1_ghaa6"]
 [ext_resource type="Texture2D" uid="uid://bfrxnashw54xy" path="res://Sprites/Flying demon sprite/with_outline/IDLEWITH.png" id="1_hghv2"]
@@ -6,6 +6,8 @@
 [ext_resource type="Texture2D" uid="uid://bn55x77y7352s" path="res://Sprites/Flying demon sprite/with_outline/HURTWITH.png" id="3_ghaa6"]
 [ext_resource type="Texture2D" uid="uid://owekb2nh0fiw" path="res://Sprites/Flying demon sprite/with_outline/DEATHWITH.png" id="4_1dp5w"]
 [ext_resource type="Texture2D" uid="uid://dsk5paxa56rrr" path="res://Sprites/Flying demon sprite/with_outline/ATTACKWITH.png" id="5_auwsv"]
+[ext_resource type="AudioStream" uid="uid://cwlpe4fb5m77w" path="res://Audio/enemyhurt.wav" id="7_1dp5w"]
+[ext_resource type="Texture2D" uid="uid://dy43f0ce1gjv3" path="res://Sprites/redexclamationmark.png" id="8_auwsv"]
 
 [sub_resource type="Animation" id="Animation_afpow"]
 length = 0.001
@@ -307,6 +309,16 @@ shape = SubResource("RectangleShape2D_ghaa6")
 [node name="DamageCooldown" type="Timer" parent="."]
 wait_time = 0.25
 one_shot = true
+
+[node name="Hurt" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("7_1dp5w")
+volume_db = 12.0
+
+[node name="ExclamationMark" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(-9, -47)
+scale = Vector2(0.0571289, 0.0683594)
+texture = ExtResource("8_auwsv")
 
 [connection signal="body_entered" from="PlayerDetectArea" to="." method="_on_player_detect_area_body_entered"]
 [connection signal="body_entered" from="PlayerInRangeArea" to="." method="_on_player_in_range_area_body_entered"]

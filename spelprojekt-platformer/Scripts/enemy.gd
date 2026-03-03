@@ -71,6 +71,7 @@ func _flying_state(delta: float) -> void:
 		direction = sign(target_player.global_position.x - global_position.x)
 		_update_enemy_direction(direction)
 		velocity.x = direction * MAXIMUM_SPEED
+		velocity.y = 0 #Låsa y-led
 	else:
 		#Patrullera normalt
 		velocity.x = direction * MAXIMUM_SPEED
@@ -135,7 +136,7 @@ func _enter_attack_state():
 func _enter_hurt_state(from_position):
 	state = HURT
 	anim.play("hurt")
-	
+	$Hurt.play()
 	
 	if from_position != null:
 		_apply_knockback(from_position)
@@ -151,11 +152,15 @@ func _on_player_in_range_area_body_entered(body: Node2D) -> void:
 	if body is Player:
 		attack_player = true
 		target_player = body
+		enemy.modulate = Color(1, 0.5, 0.5) #Fienden blir röd om spelare upptäcks
+		$ExclamationMark.visible = true
 
 func _on_player_in_range_area_body_exited(body: Node2D) -> void:
 	if body == target_player:
 		target_player = null
 		attack_player = false
+		enemy.modulate = Color(1, 1, 1) #Fiender återställs när spelare ej upptäcks
+		$ExclamationMark.visible = false
 
 func apply_damage(amount: int, from_position):
 	if not can_take_damage:

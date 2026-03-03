@@ -6,7 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://35a6tnl4m6am" path="res://Sprites/Background and tiles/background3.png" id="3_opfnp"]
 [ext_resource type="Texture2D" uid="uid://c343e5oanjwap" path="res://Sprites/Background and tiles/background4b.png" id="4_cp0ys"]
 [ext_resource type="FontFile" uid="uid://copr0q3cp1e8a" path="res://Sprites/font.ttf" id="6_opfnp"]
-[ext_resource type="AudioStream" uid="uid://btf6txdgem2y" path="res://Audio/MenuMusic.mp3" id="7_cp0ys"]
+[ext_resource type="AudioStream" uid="uid://2nlfd8jx6uvn" path="res://Audio/StartMusic.mp3" id="7_cp0ys"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yhxw7"]
 bg_color = Color(0.486275, 0.486275, 0.486275, 0.690196)
@@ -200,6 +200,7 @@ text = "Timebound"
 
 [node name="MainMenuMusic" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("7_cp0ys")
+volume_db = 18.0
 parameters/looping = false
 
 [connection signal="pressed" from="EasyButton" to="." method="_on_easy_button_pressed"]
