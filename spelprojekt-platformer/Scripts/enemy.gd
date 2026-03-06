@@ -51,13 +51,6 @@ func _reset_turn_timer():
 	turn_after_a_while = randf_range(4, 6)
 	turn_timer = turn_after_a_while
 
-"""
-func _take_damage():
-	if health <= 0:
-		_enter_death_state()
-	else:
-		_enter_hurt_state(from_position)
-"""
 #### STATE FUNCTIONS ####
 
 func _idle_state(delta: float) -> void:

@@ -948,7 +948,7 @@ height = 64.0
 
 [node name="Player" type="CharacterBody2D"]
 collision_layer = 2
-collision_mask = 9
+collision_mask = 25
 floor_snap_length = 8.0
 safe_margin = 4.0
 script = ExtResource("1_i2e8t")

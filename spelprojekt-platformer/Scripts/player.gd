@@ -85,7 +85,7 @@ func _physics_process(delta: float) -> void:
 			_wall_state(delta)
 		DASH:
 			_dash_state(delta)
-	print(state)
+	#print(state)
 
 #Kontrollerar i början för att se om man har låst upp någon perk
 func _ready():
@@ -507,7 +507,7 @@ func _on_special_attack_cooldown_timeout() -> void:
 	can_special_attack = true
 
 func _on_hitbox_body_entered(body: Node2D) -> void:
-	if body is Enemy:
+	if body is Enemy or body is Boss or body is Skeleton:
 		body.apply_damage(DAMAGE, global_position)
 
 func apply_damage(amount: int, from_position):

@@ -1,6 +1,6 @@
 extends Node2D
 
-const LAST_LEVEL = 2
+const LAST_LEVEL = 4
 const LEVEL_PATH = "res://Scenes/level_"
 const MAIN_MENU = "res://Scenes/main_menu.tscn"
 const VICTORY_MENU = "res://Scenes/victory_menu.tscn"
