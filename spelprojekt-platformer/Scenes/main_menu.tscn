@@ -198,6 +198,46 @@ theme_override_fonts/font = ExtResource("6_opfnp")
 theme_override_font_sizes/font_size = 67
 text = "Timebound"
 
+[node name="Controls" type="Label" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -936.0
+offset_top = 101.0
+offset_right = -42.0
+offset_bottom = 476.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("6_opfnp")
+theme_override_font_sizes/font_size = 40
+text = "WALK: L/R A/D
+JUMP: SPACE
+ATTACK: E
+SPECIAL ATK: Q
+WALL JUMP:
+ JUMP FROM WALL"
+
+[node name="Controls2" type="Label" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -940.0
+offset_top = 374.0
+offset_right = -106.0
+offset_bottom = 623.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("6_opfnp")
+theme_override_font_sizes/font_size = 40
+text = "UNLOCKABLE:
+DASH: SHIFT
+DOUBLE JUMP:
+SPACE TWICE"
+
 [node name="MainMenuMusic" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("7_cp0ys")
 volume_db = 18.0

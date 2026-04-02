@@ -21,9 +21,19 @@ const PLAYER_SCENE = preload("res://Scenes/Player.tscn")
 
 var time: float = 0.0
 var level_completed: bool = false
-var high_scores: Dictionary = {}
+var high_scores: Dictionary = {
+	"Level1": {
+		"easy": 60.2,
+		"medium": 60.2,
+		"hard": 60.2
+	}
+}
+var boss_dead: bool = false
 
 @export var level = 1
+
+enum Difficulty { EASY, MEDIUM, HARD }
+@export var difficulty = Difficulty.EASY
 
 func _ready() -> void:
 	$MainMenu.MainMenuMusic.stop()
@@ -38,7 +48,20 @@ func _ready() -> void:
 	gray_gem.connect("pickup", _on_gem_pickup)
 	green_gem.connect("pickup", _on_gem_pickup)
 	red_gem.connect("pickup", _on_gem_pickup)
+	if has_node("Boss"):
+		for node in get_children():
+			if "Gem" in node.name:
+				$Boss.boss_dead.connect(node._boss_dead)
 	$VictoryMenu.advance_pressed.connect(_on_victory_advance)
+	$FinalVictoryMenu.return_pressed.connect(_on_victory_return)
+	
+	#Ädelstenen till sista leveln
+	$RedGem.monitoring = false
+	$RedGem.hide()
+	
+	if level == 5:
+		$BackgroundMusic.stop()
+		$BossBattleMusic.play()
 	
 	_update_heart_amount()
 	if name in high_scores:
@@ -48,6 +71,7 @@ func _ready() -> void:
 		highscore_label.text = ""
 	
 	print(high_scores)
+	_get_highscores()
 	
 
 func _process(delta: float) -> void:
@@ -83,11 +107,16 @@ func _on_gem_pickup() -> void:
 	coincounter_label.visible = false
 	
 	#LevelManager.change_to_victory_menu()
-	
-	$VictoryMenu.visible = true
-	$VictoryMenu.VictoryMenuMusic.play()
-	$BackgroundMusic.stop()
-	get_tree().paused = true
+	if level < 5:
+		$VictoryMenu.visible = true
+		$VictoryMenu.VictoryMenuMusic.play()
+		$BackgroundMusic.stop()
+		get_tree().paused = true
+	if level == 5:
+		$FinalVictoryMenu.visible = true
+		$VictoryMenu.VictoryMenuMusic.play()
+		$BackgroundMusic.stop()
+		get_tree().paused = true
 	
 	#LevelManager.change_to_next_level(level)
 	
@@ -131,3 +160,9 @@ func _on_victory_advance():
 	get_tree().paused = false
 	LevelManager.change_to_next_level(level)
 	$VictoryMenu.VictoryMenuMusic.stop()
+	
+func _on_victory_return():
+	get_tree().paused = false
+	$VictoryMenu.VictoryMenuMusic.stop()
+	LevelManager.change_to_main_menu()
+	level = 1

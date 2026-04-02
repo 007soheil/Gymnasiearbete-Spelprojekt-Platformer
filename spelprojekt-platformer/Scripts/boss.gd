@@ -11,7 +11,7 @@ const GRAVITY = 550
 enum {IDLE, WALK, ATTACK, HURT, DEATH}
 
 var state = WALK
-var direction: int = 1
+var direction: int = -1
 var attack_player: bool = false
 var health: int = 150
 var can_take_damage: bool = true
@@ -28,6 +28,8 @@ var player_in_attack_range: bool = false
 @onready var attack_delay: Timer = $AttackDelay
 @onready var left_wall: RayCast2D = $LeftWall
 @onready var right_wall: RayCast2D = $RightWall
+
+signal boss_dead
 
 func _physics_process(delta: float) -> void:
 	match state:
@@ -121,6 +123,7 @@ func _attack_state(delta: float) -> void:
 	
 	
 func _hurt_state(delta: float) -> void:
+	attack_hitbox.set_deferred("disabled", true)
 	velocity.y += GRAVITY * delta
 	move_and_slide()
 	
@@ -131,7 +134,9 @@ func _hurt_state(delta: float) -> void:
 			_enter_walk_state()
 	
 func _death_state(delta: float) -> void:
+	attack_hitbox.set_deferred("disabled", true)
 	damage_player_collision.set_deferred("disabled", true)
+	
 	
 	if anim.is_playing():
 		return
@@ -158,7 +163,10 @@ func _enter_attack_state():
 func _enter_hurt_state(from_position):
 	state = HURT
 	anim.play("hurt")
-	#$Hurt.play() Inget hurt ljud än
+	attack_hitbox.set_deferred("disabled", true)
+	$Hurt.pitch_scale = 2.0
+	$Hurt.volume_db = 8.0
+	$Hurt.play()
 	
 	if from_position != null:
 		_apply_knockback(from_position)
@@ -168,6 +176,10 @@ func _enter_hurt_state(from_position):
 func _enter_death_state():
 	state = DEATH
 	anim.play("death")
+	$Hurt.pitch_scale = 1.0
+	$Hurt.volume_db = 10.0
+	$Hurt.play()
+	boss_dead.emit()
 	damage_player_collision.set_deferred("disabled", true)
 	attack_hitbox.set_deferred("disabled", true)
 	velocity = Vector2.ZERO
@@ -224,17 +236,23 @@ func _on_animation_player_animation_finished(anim_name: StringName) -> void:
 	if anim_name == "attack":
 		attack_hitbox.set_deferred("disabled", true)
 		if health <= 0:
+			attack_hitbox.set_deferred("disabled", true)
 			_enter_death_state()
 		else:
+			attack_hitbox.set_deferred("disabled", true)
 			_enter_walk_state()
 	elif anim_name == "hurt":
 		if health <= 0:
+			attack_hitbox.set_deferred("disabled", true)
 			_enter_death_state()
 		elif attack_player:
+			attack_hitbox.set_deferred("disabled", true)
 			_enter_attack_state()
 		else:
+			attack_hitbox.set_deferred("disabled", true)
 			_enter_walk_state()
 	elif anim_name == "death":
+		attack_hitbox.set_deferred("disabled", true)
 		queue_free()
 
 

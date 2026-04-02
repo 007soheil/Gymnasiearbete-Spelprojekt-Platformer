@@ -8,6 +8,7 @@ var is_collected: bool = false
 
 func _ready() -> void:
 	$AnimationPlayer.play("gem_animation")
+	
 
 func _on_body_entered(body: Node2D) -> void:
 	if is_collected:
@@ -17,3 +18,7 @@ func _on_body_entered(body: Node2D) -> void:
 		$AnimationPlayer.play("pickup")
 		await $AnimationPlayer.animation_finished
 		queue_free()
+
+func _boss_dead():
+	show()
+	monitoring = true

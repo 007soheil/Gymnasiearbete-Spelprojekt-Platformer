@@ -460,6 +460,7 @@ func _enter_attack2_state(attacking2: bool):
 		can_special_attack = false
 		state = ATTACK2
 		anim.play("attack3")
+		$SpecialAttackSound.play()
 		attacking2 = true
 		specialattackcooldown.start()
 		

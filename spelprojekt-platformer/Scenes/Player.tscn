@@ -1,4 +1,4 @@
-[gd_scene load_steps=53 format=3 uid="uid://b8tgqgf7qts56"]
+[gd_scene load_steps=54 format=3 uid="uid://b8tgqgf7qts56"]
 
 [ext_resource type="Script" uid="uid://c5b4ambj1vlb6" path="res://Scripts/player.gd" id="1_i2e8t"]
 [ext_resource type="Texture2D" uid="uid://dkmo1j5haml4s" path="res://Sprites/Character sprites/male_hero-design.png" id="1_rpqav"]
@@ -27,6 +27,7 @@
 [ext_resource type="AudioStream" uid="uid://c5a4o508kl5hm" path="res://Audio/hurt.wav" id="25_70hv0"]
 [ext_resource type="AudioStream" uid="uid://0w7xcji2gibk" path="res://Audio/death.mp3" id="26_8flut"]
 [ext_resource type="AudioStream" uid="uid://dcicw8vtg23gy" path="res://Audio/jump.mp3" id="27_u7x0b"]
+[ext_resource type="AudioStream" uid="uid://p6p63d242cxy" path="res://Audio/special_attack.wav" id="28_utwlt"]
 
 [sub_resource type="Animation" id="Animation_dewec"]
 length = 0.001
@@ -1040,6 +1041,10 @@ volume_db = 24.0
 
 [node name="JumpLandingSound" type="AudioStreamPlayer" parent="."]
 volume_db = 24.0
+
+[node name="SpecialAttackSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("28_utwlt")
+pitch_scale = 1.5
 
 [connection signal="timeout" from="Special_Attack_Cooldown" to="." method="_on_special_attack_cooldown_timeout"]
 [connection signal="timeout" from="HurtTimer" to="." method="_on_hurt_timer_timeout"]

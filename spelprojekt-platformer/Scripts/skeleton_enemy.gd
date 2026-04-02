@@ -20,6 +20,8 @@ var wall_turn_cooldown = 0.5
 var wall_timer = 0.0
 var player_in_attack_range: bool = false
 
+var can_turn: bool = true
+
 @onready var skeleton: Sprite2D = $Sprite2D
 @onready var anim: AnimationPlayer = $AnimationPlayer
 @onready var damage_cooldown: Timer = $DamageCooldown
@@ -28,12 +30,17 @@ var player_in_attack_range: bool = false
 @onready var attack_delay: Timer = $AttackDelay
 @onready var left_wall: RayCast2D = $LeftWall
 @onready var right_wall: RayCast2D = $RightWall
+@onready var left_edge: RayCast2D = $LeftEdge
+@onready var right_edge: RayCast2D = $RightEdge
+@onready var edge_timer: Timer = $EdgeTimer
 
 func _physics_process(delta: float) -> void:
 	if direction == -1:
 		skeleton.flip_h = true
+		attack_hitbox.position = Vector2(-38, -9)
 	else:
 		skeleton.flip_h = false
+		attack_hitbox.position = Vector2(38, -9)
 	
 	match state:
 		IDLE:
@@ -71,6 +78,11 @@ func _walk_state(delta: float) -> void:
 		
 	#Gravitation
 	velocity.y += GRAVITY * delta
+	
+	#Vända för att hindra från att falla från en plattform och har en edge-timer så att skeletten inte vibrerar vid kanter
+	if (not left_edge.is_colliding() and is_on_floor() and can_turn) or (not right_edge.is_colliding() and is_on_floor() and can_turn):
+			direction *= -1
+			can_turn = true
 
 	if attack_player and target_player != null:
 		#Jaga spelare
@@ -86,7 +98,8 @@ func _walk_state(delta: float) -> void:
 			velocity.x = 0
 		else:
 			velocity.x = direction * MAXIMUM_SPEED
-
+			
+		
 		#Attackera om spelare och boss är i samma område
 		if $PlayerDetectArea.get_overlapping_bodies().has(target_player):
 			_enter_attack_state()
@@ -130,6 +143,7 @@ func _hurt_state(delta: float) -> void:
 	
 func _death_state(delta: float) -> void:
 	damage_player_collision.set_deferred("disabled", true)
+	attack_hitbox.set_deferred("disabled", true)
 	
 	if anim.is_playing():
 		return
@@ -156,7 +170,8 @@ func _enter_attack_state():
 func _enter_hurt_state(from_position):
 	state = HURT
 	anim.play("hurt")
-	#$Hurt.play() Inget hurt ljud än
+	attack_hitbox.set_deferred("disabled", true)
+	$Hurt.play()
 	
 	if from_position != null:
 		_apply_knockback(from_position)
@@ -166,6 +181,7 @@ func _enter_hurt_state(from_position):
 func _enter_death_state():
 	state = DEATH
 	anim.play("death")
+	$Hurt.play()
 	damage_player_collision.set_deferred("disabled", true)
 	attack_hitbox.set_deferred("disabled", true)
 	velocity = Vector2.ZERO
@@ -222,18 +238,28 @@ func _on_animation_player_animation_finished(anim_name: StringName) -> void:
 	if anim_name == "attack":
 		attack_hitbox.set_deferred("disabled", true)
 		if health <= 0:
+			attack_hitbox.set_deferred("disabled", true)
 			_enter_death_state()
 		else:
+			attack_hitbox.set_deferred("disabled", true)
 			_enter_walk_state()
 	elif anim_name == "hurt":
 		if health <= 0:
+			attack_hitbox.set_deferred("disabled", true)
 			_enter_death_state()
 		elif attack_player:
+			attack_hitbox.set_deferred("disabled", true)
 			_enter_attack_state()
 		else:
+			attack_hitbox.set_deferred("disabled", true)
 			_enter_walk_state()
 	elif anim_name == "death":
+		attack_hitbox.set_deferred("disabled", true)
 		queue_free()
 
 func _on_attack_delay_timeout() -> void:
 	attack_hitbox.set_deferred("disabled", false)
+
+
+func _on_edge_timer_timeout() -> void:
+	can_turn = true

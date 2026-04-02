@@ -1,0 +1,72 @@
+[gd_scene load_steps=7 format=3 uid="uid://c0svrtqcwas0x"]
+
+[ext_resource type="FontFile" uid="uid://copr0q3cp1e8a" path="res://Sprites/font.ttf" id="1_fykiq"]
+[ext_resource type="Script" uid="uid://bgxchkojqb2i0" path="res://Scripts/final_victory_menu.gd" id="1_qq0vw"]
+[ext_resource type="AudioStream" uid="uid://imvtntnjbdvn" path="res://Audio/Victory!.wav" id="2_qq0vw"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_aew2e"]
+bg_color = Color(0.694118, 0.694118, 0.694118, 0.705882)
+corner_radius_top_left = 35
+corner_radius_top_right = 35
+corner_radius_bottom_right = 35
+corner_radius_bottom_left = 35
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cmk7n"]
+bg_color = Color(1, 1, 1, 0.705882)
+corner_radius_top_left = 35
+corner_radius_top_right = 35
+corner_radius_bottom_right = 35
+corner_radius_bottom_left = 35
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7kje7"]
+bg_color = Color(0, 0.705882, 0.517647, 0.705882)
+corner_radius_top_left = 35
+corner_radius_top_right = 35
+corner_radius_bottom_right = 35
+corner_radius_bottom_left = 35
+
+[node name="FinalVictoryMenu" type="CanvasLayer"]
+script = ExtResource("1_qq0vw")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+offset_right = 1923.0
+offset_bottom = 1079.0
+color = Color(1, 1, 1, 0.298039)
+
+[node name="LevelCompletedLabel" type="Label" parent="."]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -731.0
+offset_top = 220.0
+offset_right = 1224.0
+offset_bottom = 347.0
+grow_horizontal = 2
+theme_override_fonts/font = ExtResource("1_fykiq")
+theme_override_font_sizes/font_size = 80
+text = "Final level completed!"
+
+[node name="ReturnButton" type="Button" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -270.0
+offset_top = -107.0
+offset_right = 271.0
+offset_bottom = 11.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("1_fykiq")
+theme_override_font_sizes/font_size = 50
+theme_override_styles/hover = SubResource("StyleBoxFlat_aew2e")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_cmk7n")
+theme_override_styles/normal = SubResource("StyleBoxFlat_7kje7")
+text = "Return To Main Menu"
+
+[node name="VictoryMenuMusic" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_qq0vw")
+volume_db = 8.0
+
+[connection signal="pressed" from="ReturnButton" to="." method="_on_return_button_pressed"]

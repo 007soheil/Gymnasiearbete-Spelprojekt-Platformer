@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=3 uid="uid://ctqwjhjqqfrv7"]
+[gd_scene load_steps=33 format=3 uid="uid://ctqwjhjqqfrv7"]
 
 [ext_resource type="Texture2D" uid="uid://crcyyq110x3ol" path="res://Sprites/Background and tiles/mainlev_build.png" id="1_754fn"]
 [ext_resource type="Script" uid="uid://bq4h7amvidiss" path="res://Scripts/level.gd" id="1_oqgf2"]
@@ -24,6 +24,8 @@
 [ext_resource type="PackedScene" uid="uid://brxuvsi500ww0" path="res://Scenes/green_gem.tscn" id="23_gf56v"]
 [ext_resource type="PackedScene" uid="uid://77b6r4n6mxt3" path="res://Scenes/red_gem.tscn" id="24_6y3s5"]
 [ext_resource type="AudioStream" uid="uid://47u6wl4b6lq4" path="res://Audio/Background Music.mp3" id="25_6y3s5"]
+[ext_resource type="AudioStream" uid="uid://et00ndoo4n8q" path="res://Audio/BossBattleMusic.wav" id="25_u0did"]
+[ext_resource type="PackedScene" uid="uid://c0svrtqcwas0x" path="res://Scenes/final_victory_menu.tscn" id="26_u0did"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_qxfql"]
 texture = ExtResource("1_754fn")
@@ -4623,7 +4625,7 @@ position = Vector2(232.753, 198.795)
 
 [node name="BackgroundMusic" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("25_6y3s5")
-parameters/looping = false
+parameters/looping = true
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -4642,6 +4644,12 @@ offset_right = 270.0
 offset_bottom = 121.0
 value = 100.0
 show_percentage = false
+
+[node name="BossBattleMusic" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("25_u0did")
+
+[node name="FinalVictoryMenu" parent="." instance=ExtResource("26_u0did")]
+visible = false
 
 [connection signal="dead" from="Player" to="." method="_on_player_dead"]
 [connection signal="pickup" from="Coins/Coin" to="." method="_on_coin_pickup"]
