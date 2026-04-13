@@ -1,4 +1,4 @@
-[gd_scene load_steps=33 format=3 uid="uid://ctqwjhjqqfrv7"]
+[gd_scene load_steps=34 format=3 uid="uid://ctqwjhjqqfrv7"]
 
 [ext_resource type="Texture2D" uid="uid://crcyyq110x3ol" path="res://Sprites/Background and tiles/mainlev_build.png" id="1_754fn"]
 [ext_resource type="Script" uid="uid://bq4h7amvidiss" path="res://Scripts/level.gd" id="1_oqgf2"]
@@ -19,6 +19,7 @@
 [ext_resource type="PackedScene" uid="uid://dq7gdprqybvfi" path="res://Scenes/gameover_menu.tscn" id="14_c7le1"]
 [ext_resource type="PackedScene" uid="uid://cnrf6bu1v01a2" path="res://Scenes/main_menu.tscn" id="16_nngtn"]
 [ext_resource type="PackedScene" uid="uid://b7t8ewu1kl3pl" path="res://Scenes/victory_menu.tscn" id="18_vofx3"]
+[ext_resource type="Script" uid="uid://b2iewpjy4auo2" path="res://SCripts/blue_gem.gd" id="20_53r2q"]
 [ext_resource type="PackedScene" uid="uid://b10dn1mejibi5" path="res://Scenes/yellow_gem.tscn" id="21_0cmrb"]
 [ext_resource type="PackedScene" uid="uid://ckx56j5q2rclf" path="res://Scenes/gray_gem.tscn" id="22_pnhnk"]
 [ext_resource type="PackedScene" uid="uid://brxuvsi500ww0" path="res://Scenes/green_gem.tscn" id="23_gf56v"]
@@ -4610,18 +4611,23 @@ visible = false
 
 [node name="BlueGem" parent="." instance=ExtResource("14_2klc5")]
 position = Vector2(372.525, 200.602)
+script = ExtResource("20_53r2q")
 
 [node name="YellowGem" parent="." instance=ExtResource("21_0cmrb")]
 position = Vector2(329.934, 198.193)
+script = ExtResource("20_53r2q")
 
 [node name="GrayGem" parent="." instance=ExtResource("22_pnhnk")]
 position = Vector2(281.944, 198.193)
+script = ExtResource("20_53r2q")
 
 [node name="GreenGem" parent="." instance=ExtResource("23_gf56v")]
 position = Vector2(181.164, 196.988)
+script = ExtResource("20_53r2q")
 
 [node name="RedGem" parent="." instance=ExtResource("24_6y3s5")]
 position = Vector2(232.753, 198.795)
+script = ExtResource("20_53r2q")
 
 [node name="BackgroundMusic" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("25_6y3s5")
